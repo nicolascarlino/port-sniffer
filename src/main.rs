@@ -15,21 +15,23 @@ use std::process::Command;
 /////////////////////////////////////////////////////
 
 fn main() {
-    print!("\x1B[2J"); // clear screen
-
-    let new_title = "port@scanner:~$: nico.dev";
+    let new_title = "port@scanner:~$: nico.dev | exit with ctrl+c";
     let new_title_wide: Vec<u16> = OsStr::new(new_title).encode_wide().chain(once(0)).collect();
     unsafe {
         SetConsoleTitleW(new_title_wide.as_ptr());
     }
 
-    println!("port@scanner:~$: ip target: ");
-    let input: String = read!();
-    println!("");
-    println!("port@scanner:~$: port to scan: ");
-    let input2: String = read!();
-    println!("");
-    port_scanner(input, input2);
+    loop {
+        print!("\x1B[2J\x1B[H"); // clear screen
+        println!("port@scanner:~$: target ip: ");
+        let input: String = read!();
+        println!("");
+        println!("port@scanner:~$: port: ");
+        let input2: String = read!();
+        println!("");
+        port_scanner(input, input2);
+    }
+
 }
 
 #[tokio::main]
@@ -43,7 +45,6 @@ async fn port_scanner(address: String, portinput: String){
 
             let _ = Command::new("cmd.exe").arg("/c").arg("pause").status();
 
-            main();
         }
         Err(_) => {
             println!("port {} is closed", port);
@@ -51,7 +52,6 @@ async fn port_scanner(address: String, portinput: String){
 
             let _ = Command::new("cmd.exe").arg("/c").arg("pause").status();
 
-            main();
         }
     }
 }
