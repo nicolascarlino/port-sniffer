@@ -32,6 +32,7 @@ fn main() {
     port_scanner(input, input2);
 }
 
+#[tokio::main]
 async fn port_scanner(address: String, portinput: String){
     let addr = address;
     let port = portinput.parse().unwrap();
